@@ -1,3 +1,7 @@
+# Summary
+This project create a site web using react, react router, bootstrap, NASA API, SCSS
+to facilitate select, filter, watch the video and images of cosmic 
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

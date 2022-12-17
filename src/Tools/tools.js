@@ -14,6 +14,8 @@ function changeToDate(strdate) {
 function getStoreDate(keyDate, initDate) {
     try {
         const strdate = JSON.parse(localStorage.getItem(keyDate));
+        if (!strdate)
+            return initDate
         let lcdate = new Date(strdate);
         console.log('lcdate', lcdate);
         let queryDate = changeToQueryDate(lcdate);

@@ -1,47 +1,37 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { changeToQueryDate } from '../../../Tools/tools'
 
-const PikerDate = ({ setLoading, errorMessage, dateLabel, setDate, initDate, refDate, setErrorMessage }) => {
+const PikerDate = ({ setLoading, dateLabel, setDate, initDate, refDate }) => {
+    const [year1, month1, day1] = initDate.split('-');
+    let localKey = 'localDate' + dateLabel;
+    const getlcDate = () => {
+        try {
+            const strdate = JSON.parse(localStorage.getItem(localKey));
+            return strdate ? new Date(strdate) : new Date(year1, month1 - 1, day1);
+        } catch (err) {
+            return new Date(year1, month1 - 1, day1)
+        }
+    }
 
-    const [
-        year1, month1, day1] = initDate.split('-');
-    const [localDate, setLocalDate] = useState(new Date(year1, month1 - 1, day1));
+    const [localDate, setLocalDate] = useState(() => (getlcDate()) || new Date(year1, month1 - 1, day1));
+
+    useEffect(() => {
+        localStorage.setItem(localKey, JSON.stringify(localDate));
+    }, [localDate, localKey]);
 
     return (
 
         <div className="form-group">
             <label >{dateLabel}</label>
-
             <DatePicker selected={localDate} onChange={(date) => {
                 let today = new Date();
                 if (date > today)
                     date = today;
-                let year = date.getFullYear()
-                let month = date.getMonth() + 1
-                let day = date.getDate()
-                console.log('refDate', refDate);
-
-
-                if (dateLabel === 'Start') {
-                    let [edY, edM, edD] = refDate.split('-');
-                    let end = new Date(edY, parseInt(edM, 10) - 1, edD);
-                    if (end < date) {
-                        setErrorMessage('Start date should less than end date')
-                        setLocalDate(date);
-                    }
-                    else {
-                        setErrorMessage('')
-                        setLocalDate(date)
-
-                        setDate(`${year}-${month}-${day}`)
-                    }
-                } else {
-                    setErrorMessage('')
-                    setLocalDate(date);
-
-                    setDate(`${year}-${month}-${day}`)
-                }
+                let strDate = changeToQueryDate(date)
+                setLocalDate(date);
+                setDate(strDate)
             }} />
         </div>
     )

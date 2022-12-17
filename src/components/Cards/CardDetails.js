@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom';
+import { changeToDate } from '../../Tools/tools'
 
 const CardDetails = () => {
+    let apiBase = `https://api.nasa.gov/planetary/apod/?api_key=M3QhqmdhPfnkgx0bXtrbGNj2CJ6LLhGqP7Wn15rL`;
+
     let { title, startDate, endDate } = useParams();
-    let api = `https://api.nasa.gov/planetary/apod/?api_key=M3QhqmdhPfnkgx0bXtrbGNj2CJ6LLhGqP7Wn15rL&start_date=${startDate}&end_date=${endDate}&thumbs=true`;
+
     let [result, setResult] = useState([]);
 
     const [isLoading, setLoading] = useState(true);
@@ -21,6 +24,15 @@ const CardDetails = () => {
     useEffect(() => {
         (async function () {
             setLoading(true);
+            let api = apiBase;
+
+            let stD = changeToDate(startDate);
+            let edD = changeToDate(endDate);
+            if (stD > edD) {
+                api += `&start_date=${endDate}&end_date=${startDate}&thumbs=true`;
+            } else {
+                api += `&start_date=${startDate}&end_date=${endDate}&thumbs=true`
+            }
             let data = await fetch(api).then(res => {
                 return res.json();
             });
@@ -37,7 +49,7 @@ const CardDetails = () => {
             setLoading(false);
         })()
 
-    }, [api, title]);
+    }, [apiBase, title, startDate, endDate]);
 
     const image = media_type === 'image' ? (hdurl ?? url) : thumbnail_url;
 

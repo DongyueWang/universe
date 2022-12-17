@@ -1,9 +1,13 @@
 import React, { useState } from 'react'
 import PikerDate from './PikerDate'
+import styles from './DateChooser.module.scss'
+import Tooltip from '../../Tooltip/Tooltip'
+import { getStoreDate } from '../../../Tools/tools'
 
 const DateChooser = ({ setLoading, initStartDate, initEndDate, setEndDate, setStartDate, endDate, startDate }) => {
 
-    const [errorMessage, setErrorMessage] = useState('');
+    const [chooserStart, setChooserStart] = useState(getStoreDate('localDateStart', initStartDate));
+    const [chooserEnd, setChooserEnd] = useState(getStoreDate('localDateEnd', initEndDate));
 
     return (
         <div className="accordion-item">
@@ -15,20 +19,29 @@ const DateChooser = ({ setLoading, initStartDate, initEndDate, setEndDate, setSt
             <div id="collapseOne" className="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                 <div className="accordion-body 
             d-flex flex-column flex-wrap gap-3">
-                    <div style={errorMessage ? { border: '1px solid red', color: 'red' } : {}}>
-                        <PikerDate setLoading={setLoading} setDate={setStartDate} dateLabel={'Start'} initDate={initStartDate} refDate={endDate} setErrorMessage={setErrorMessage}
-                            errorMessage={errorMessage}
+
+                    <Tooltip content="To speed the search, max period suggestion is 2 months" direction="right">
+
+                        <PikerDate setLoading={setLoading} setDate={setChooserStart} dateLabel={'Start'} initDate={initStartDate} refDate={endDate}
                         />
-                        {errorMessage && (
-                            <p className="error"> {errorMessage} </p>
-                        )}
-                    </div>
-                    <PikerDate setLoading={setLoading} setDate={setEndDate} dateLabel={'End'} initDate={initEndDate} refDate={startDate} setErrorMessage={setErrorMessage}
-                        errorMessage={errorMessage} />
+
+                    </Tooltip>
+                    <Tooltip content="To speed the search, max period suggestion is 2 months" direction="right">
+                        <PikerDate setLoading={setLoading} setDate={setChooserEnd} dateLabel={'End'} initDate={initEndDate} refDate={startDate} />
+                    </Tooltip>
+                    <button
+                        onClick={
+                            (e) => {
+                                e.preventDefault();
+                                setStartDate(chooserStart);
+                                setEndDate(chooserEnd);
+                            }
+                        }
+                        className={`${styles.btn} btn btn-primary fs-7`} type='button'>Get pictures and videos</button>
 
                 </div>
             </div>
-        </div>
+        </div >
     )
 }
 

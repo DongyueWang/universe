@@ -11,6 +11,7 @@ import './App.css';
 import CardDetails from './components/Cards/CardDetails';
 import Sun from './Pages/Sun'
 import Earth from './Pages/Earth';
+import { getStoreDate, changeToDate } from './Tools/tools'
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
 }
 
 const Home = () => {
+
   let today = new Date();
   today.setHours(0, 0, 0, 0);
   let day = today.getDate();
@@ -46,19 +48,30 @@ const Home = () => {
   let [search, setSearch] = useState("");
   let [mediaType, setMediaType] = useState("");
   let [results, setResults] = useState([]);
-  let [startDate, setStartDate] = useState(initStartDate);
-  let [endDate, setEndDate] = useState(initEndDate);
+  let [startDate, setStartDate] = useState(() => getStoreDate('localDateStart', initStartDate));
+  let [endDate, setEndDate] = useState(() => getStoreDate('localDateEnd', initEndDate));
   let [pageCount, setPageCount] = useState(0)
   let [pageSize, setPageSize] = useState(4)
 
   const [isLoading, setLoading] = useState(true);
 
-  let api = `https://api.nasa.gov/planetary/apod/?api_key=M3QhqmdhPfnkgx0bXtrbGNj2CJ6LLhGqP7Wn15rL&start_date=${startDate}&end_date=${endDate}&thumbs=true`
+  /* let api = `https://api.nasa.gov/planetary/apod/?api_key=M3QhqmdhPfnkgx0bXtrbGNj2CJ6LLhGqP7Wn15rL&start_date=${startDate}&end_date=${endDate}&thumbs=true`
+ */
+
+  let apiBase = `https://api.nasa.gov/planetary/apod/?api_key=M3QhqmdhPfnkgx0bXtrbGNj2CJ6LLhGqP7Wn15rL`;
 
   useEffect(() => {
-
+    let api = apiBase;
     (async function () {
       setLoading(true);
+      let stD = changeToDate(startDate);
+      let edD = changeToDate(endDate);
+      if (stD > edD) {
+        api += `&start_date=${endDate}&end_date=${startDate}&thumbs=true`;
+      } else {
+        api += `&start_date=${startDate}&end_date=${endDate}&thumbs=true`
+      }
+
       let data = await fetch(api).then(res => {
         return res.json();
       });
@@ -93,7 +106,7 @@ const Home = () => {
     })();
 
   },
-    [api, search, mediaType, pageNumber, pageSize]);
+    [apiBase, search, mediaType, pageNumber, pageSize, startDate, endDate]);
 
   return (
     <div>

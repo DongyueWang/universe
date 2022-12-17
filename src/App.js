@@ -11,7 +11,7 @@ import './App.css';
 import CardDetails from './components/Cards/CardDetails';
 import Sun from './Pages/Sun'
 import Earth from './Pages/Earth';
-import { getStoreDate, changeToDate } from './Tools/tools'
+import { changeToDate } from './Tools/tools'
 
 function App() {
   return (
@@ -48,8 +48,8 @@ const Home = () => {
   let [search, setSearch] = useState("");
   let [mediaType, setMediaType] = useState("");
   let [results, setResults] = useState([]);
-  let [startDate, setStartDate] = useState(() => getStoreDate('localDateStart', initStartDate));
-  let [endDate, setEndDate] = useState(() => getStoreDate('localDateEnd', initEndDate));
+  let [startDate, setStartDate] = useState(initStartDate);
+  let [endDate, setEndDate] = useState(initEndDate);
   let [pageCount, setPageCount] = useState(0)
   let [pageSize, setPageSize] = useState(4)
 

@@ -2,12 +2,12 @@ import React, { useState } from 'react'
 import PikerDate from './PikerDate'
 import styles from './DateChooser.module.scss'
 import Tooltip from '../../Tooltip/Tooltip'
-import { getStoreDate } from '../../../Tools/tools'
+
 
 const DateChooser = ({ setLoading, initStartDate, initEndDate, setEndDate, setStartDate, endDate, startDate }) => {
 
-    const [chooserStart, setChooserStart] = useState(getStoreDate('localDateStart', initStartDate));
-    const [chooserEnd, setChooserEnd] = useState(getStoreDate('localDateEnd', initEndDate));
+    const [chooserStart, setChooserStart] = useState(initStartDate);
+    const [chooserEnd, setChooserEnd] = useState(initEndDate);
 
     return (
         <div className="accordion-item">

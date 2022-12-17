@@ -1,0 +1,10 @@
+$radius: 10px;
+
+.cards {
+    border: 2px solid #0b5ed7;
+    border-radius: $radius;
+}
+
+.img {
+    border-radius: $radius $radius 0 0;
+}
